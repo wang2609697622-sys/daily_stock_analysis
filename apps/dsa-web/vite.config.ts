@@ -8,8 +8,22 @@ const packageJson = JSON.parse(
 ) as { version?: string }
 const buildTime = new Date().toISOString()
 
+function normalizeBasePath(value?: string) {
+  const trimmed = value?.trim()
+  if (!trimmed) {
+    return '/'
+  }
+
+  const isAbsoluteUrl = /^https?:\/\//i.test(trimmed)
+  const withLeadingSlash = trimmed.startsWith('/') || isAbsoluteUrl ? trimmed : `/${trimmed}`
+  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`
+}
+
+const basePath = normalizeBasePath(process.env.VITE_PUBLIC_BASE_PATH)
+
 // https://vite.dev/config/
 export default defineConfig({
+  base: basePath,
   define: {
     __APP_PACKAGE_VERSION__: JSON.stringify(packageJson.version ?? '0.0.0'),
     __APP_BUILD_TIME__: JSON.stringify(buildTime),
