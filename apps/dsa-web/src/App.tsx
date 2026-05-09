@@ -11,6 +11,7 @@ import PortfolioPage from './pages/PortfolioPage';
 import { ApiErrorAlert, Shell } from './components/common';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { useAgentChatStore } from './stores/agentChatStore';
+import { APP_BASE_PATH } from './utils/constants';
 import './App.css';
 
 const AppContent: React.FC = () => {
@@ -75,7 +76,7 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <Router basename={APP_BASE_PATH || undefined}>
       <AuthProvider>
         <AppContent />
       </AuthProvider>
