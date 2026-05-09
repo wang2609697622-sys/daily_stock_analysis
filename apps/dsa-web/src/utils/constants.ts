@@ -1,4 +1,5 @@
 const configuredApiBaseUrl = import.meta.env.VITE_API_URL?.trim();
+const configuredBaseUrl = import.meta.env.BASE_URL?.trim() || '/';
 
 declare const __APP_PACKAGE_VERSION__: string | undefined;
 declare const __APP_BUILD_TIME__: string | undefined;
@@ -9,6 +10,16 @@ const UNKNOWN_BUILD_TIME = '未提供';
 // 默认保持同源 API，避免生产/静态部署时把请求错误打到用户本机 localhost。
 // 仅在显式提供 VITE_API_URL 时才覆盖默认行为。
 export const API_BASE_URL = configuredApiBaseUrl || '';
+export const APP_BASE_PATH = configuredBaseUrl === '/'
+  ? ''
+  : configuredBaseUrl.replace(/\/$/, '');
+
+export function withAppBasePath(path: string) {
+  if (!APP_BASE_PATH) {
+    return path;
+  }
+  return `${APP_BASE_PATH}${path.startsWith('/') ? path : `/${path}`}`;
+}
 
 export type WebBuildInfo = {
   version: string;
